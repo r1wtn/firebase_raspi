@@ -18,7 +18,7 @@ python3 -m pip install -r requirements.txt
 You can upload a sample image, download and save it as `test.png`.
 
 ```bash
-python main.py \
+python3 main.py \
     --key-path <path_to_credential_json_file> \
     --storage-name <storage_name> \
     --image-path "data/sample.png"
