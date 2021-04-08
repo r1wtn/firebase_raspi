@@ -2,6 +2,7 @@
 from lib.firebase_manager import FirebaseManager
 from PIL import Image
 import argparse
+from datetime import datetime
 
 parser = argparse.ArgumentParser(description='post data with firebase')
 parser.add_argument('--key-path', help='path to firebase admin credentials')
@@ -24,3 +25,18 @@ fm.upload_image_file("test/test01.png", image_path)
 
 # 3. download from firebase and save as test.png
 fm.download_image("test/test01.png", "test.png")
+
+# 4. generate sample GPS data
+tractor_id = "abc01"
+lat = 35.69362830636109
+lng = 139.80611369660275
+timestamp = datetime.now()
+gps_data = {
+    "tractor_id": tractor_id,
+    "latitude": lat,
+    "longitude": lng,
+    "timestamp": timestamp 
+}
+
+# 5. post one gps data to firestore
+fm.insert_one("gps", gps_data)
