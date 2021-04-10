@@ -22,13 +22,14 @@ csv_path = args.csv_path
 # init firebase manager
 fm = FirebaseManager(key_path, storage_name)
 
-
+# parse current.csv and generate json
 gps_json = {}
 keys = ("latitude", "longitude", "sampled_at")
 with open(csv_path, "r") as f:
     for row in csv.DictReader(f, keys):
         gps_json = row
 
+# image_name is string of datetime now
 sent_at = datetime.now()
 image_name = sent_at.isoformat(timespec='seconds') + ".jpg"
 
@@ -36,9 +37,8 @@ gps_json["sent_at"] = sent_at
 gps_json["tractor_id"] = os.uname()[1]
 gps_json["image_name"] = image_name
 
+# insert gps data into firestore
 fm.insert_one("gps", gps_json)
 
-
-
-# 2. upload image to firebase storage
+# upload image to firebase storage
 fm.upload_image_file(f"test/{image_name}", image_path)

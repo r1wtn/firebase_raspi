@@ -21,5 +21,6 @@ You can upload a sample image, download and save it as `test.png`.
 python3 main.py \
     --key-path <path_to_credential_json_file> \
     --storage-name <storage_name> \
-    --image-path "data/sample.png"
+    --image-path /mnt/usb/current.jpg \
+    --csv-path /mnt/usb/current.csv
 ```
