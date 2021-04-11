@@ -28,7 +28,7 @@ class FirebaseManager(object):
 
     def insert_one_subcollection(self, parent, parent_doc_id, child, child_doc_id, data):
         doc_ref = self.db.collection(parent).document(parent_doc_id).collection(child).document(child_doc_id)
-        doc_ref.set(dat)
+        doc_ref.set(data)
         return True
 
     def insert_many(self, collection_path, docs):
