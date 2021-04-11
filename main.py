@@ -41,4 +41,5 @@ gps_json["image_name"] = image_name
 fm.insert_one("gps", gps_json)
 
 # upload image to firebase storage
-fm.upload_image_file(f"test/{image_name}", image_path)
+if image_path is not None:
+    fm.upload_image_file(f"test/{image_name}", image_path)
