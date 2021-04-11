@@ -5,6 +5,7 @@ from firebase_admin import auth
 from firebase_admin import storage
 import io
 from typing import Optional
+import os
 
 
 class FirebaseManager(object):
@@ -72,6 +73,19 @@ class FirebaseManager(object):
     def download_image(self, image_name, save_name):
         blob = self.bucket.blob(image_name)
         blob.download_to_filename(save_name)
+        return True
+
+    def download_all_images(self, save_dir):
+        blobs = self.bucket.list_blobs()
+        for blob in blobs:
+            _blob_name = blob.name
+            blob_dir = "/".join(_blob_name.split("/")[:-1])
+            blob_name = _blob_name.split("/")[-1]
+            _save_dir = os.path.join(save_dir, blob_dir)
+            if not os.path.exists(_save_dir):
+                os.makedirs(_save_dir)
+            save_name = os.path.join(_save_dir, blob_name)
+            blob.download_to_filename(save_name)
         return True
 
     def delete_image(self, image_id):

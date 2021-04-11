@@ -32,6 +32,7 @@ with open(csv_path, "r") as f:
 # image_name is string of datetime now
 sent_at = datetime.now()
 image_name = sent_at.isoformat(timespec='seconds') + ".jpg"
+image_name = image_name.replace(":", "_")
 tractor_id = os.uname()[1]
 
 gps_json["sent_at"] = sent_at

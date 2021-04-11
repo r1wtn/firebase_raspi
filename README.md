@@ -24,3 +24,12 @@ python3 main.py \
     --image-path /mnt/usb/current.jpg \
     --csv-path /mnt/usb/current.csv
 ```
+
+## Download images from firebase
+
+```bash
+python viewer.py \
+    --key-path <keypath> \
+    --storage-name <storage_name> \
+    --save-dir "out/"
+```
