@@ -32,14 +32,19 @@ with open(csv_path, "r") as f:
 # image_name is string of datetime now
 sent_at = datetime.now()
 image_name = sent_at.isoformat(timespec='seconds') + ".jpg"
+tractor_id = os.uname()[1]
 
 gps_json["sent_at"] = sent_at
-gps_json["tractor_id"] = os.uname()[1]
+gps_json["tractor_id"] = tractor_id
 gps_json["image_name"] = image_name
 
 # insert gps data into firestore
-fm.insert_one("gps", gps_json)
+parent_collection = "gps"
+parent_doc_id = os.uname()[1]
+child_collection = "gps"
+child_doc_id = gps_json["sampled_at"]
+fm.insert_one_subcollection(parent_collection, parent_doc_id, child_collection, child_doc_id, gps_json)
 
 # upload image to firebase storage
 if image_path is not None:
-    fm.upload_image_file(f"test/{image_name}", image_path)
+    fm.upload_image_file(f"gps/{tractor_id}/{image_name}", image_path)
