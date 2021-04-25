@@ -2,4 +2,5 @@ venv/
 **/__pycache__/
 **.sh
 
+.python-version
 out/

@@ -88,6 +88,10 @@ class FirebaseManager(object):
             blob.download_to_filename(save_name)
         return True
 
+    def get_image_url(self, image_path):
+        blob = self.bucket.blob(image_path)
+        return blob.path
+
     def delete_image(self, image_id):
         blob = self.bucket.blob(image_id)
         blob.delete()
