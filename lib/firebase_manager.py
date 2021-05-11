@@ -1,3 +1,4 @@
+from datetime import time
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -6,6 +7,8 @@ from firebase_admin import storage
 import io
 from typing import Optional
 import os
+from pytz import timezone
+from tqdm import tqdm
 
 
 class FirebaseManager(object):
@@ -77,7 +80,7 @@ class FirebaseManager(object):
 
     def download_all_images(self, save_dir):
         blobs = self.bucket.list_blobs()
-        for blob in blobs:
+        for blob in tqdm(blobs):
             _blob_name = blob.name
             blob_dir = "/".join(_blob_name.split("/")[:-1])
             blob_name = _blob_name.split("/")[-1]
@@ -88,14 +91,41 @@ class FirebaseManager(object):
             blob.download_to_filename(save_name)
         return True
 
+    def download_images_by_daterange(self, save_dir, start_date, end_date):
+        blobs = self.bucket.list_blobs()
+        for blob in tqdm(blobs):
+            _blob_name = blob.name
+            blob_dir = "/".join(_blob_name.split("/")[:-1])
+            blob_name = _blob_name.split("/")[-1]
+            time_created = blob.time_created
+            jst_time_str = time_created.astimezone(tz=timezone("Asia/Tokyo")).strftime("%Y%m%d")
+            if start_date <= time_created and time_created < end_date:
+                _save_dir = os.path.join(save_dir, blob_dir, jst_time_str)
+                if not os.path.exists(_save_dir):
+                    os.makedirs(_save_dir)
+                save_name = os.path.join(_save_dir, blob_name)
+                blob.download_to_filename(save_name)
+        return True
+
     def get_image_url(self, image_path):
         blob = self.bucket.blob(image_path)
-        return blob.path
+        return blob.public_url
 
     def delete_image(self, image_id):
         blob = self.bucket.blob(image_id)
         blob.delete()
         return True
+
+    def delete_image_by_daterange(self, start_date, end_date):
+        blobs = self.bucket.list_blobs()
+        for blob in tqdm(blobs):
+            blob_name = blob.name
+            time_created = blob.time_created
+            if start_date <= time_created and time_created < end_date:
+                blob.delete()
+                print(f"{blob_name} deleted.")
+        return True
+
 
     def clear_bucket(self):
         blobs = self.bucket.list_blobs()
